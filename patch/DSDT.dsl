@@ -1,4 +1,4 @@
-/*
+ /*
  * Intel ACPI Component Architecture
  * AML/ASL+ Disassembler version 20171110 (64-bit version)(RM)
  * Copyright (c) 2000 - 2017 Intel Corporation
@@ -10728,7 +10728,9 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
     })
     Method (_PTS, 1, NotSerialized)  // _PTS: Prepare To Sleep
     {
-        If (Arg0)
+        External(\_SB.PCI0.PEG0.PEGP._ON, MethodObj)
+If (CondRefOf(\_SB.PCI0.PEG0.PEGP._ON)) { \_SB.PCI0.PEG0.PEGP._ON() }
+If (Arg0)
         {
             XPTS (Arg0)
             \_SB.TPM.TPTS (Arg0)
@@ -10744,7 +10746,9 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
         \_SB.PCI0.NWAK (Arg0)
         \_SB.PCI0.LPCB.SWAK (Arg0)
         XWAK (Arg0)
-        Return (WAKP)
+        External(\_SB.PCI0.PEG0.PEGP._OFF, MethodObj)
+If (CondRefOf(\_SB.PCI0.PEG0.PEGP._OFF)) { \_SB.PCI0.PEG0.PEGP._OFF() }
+Return (WAKP)
     }
 
     Scope (_PR)
