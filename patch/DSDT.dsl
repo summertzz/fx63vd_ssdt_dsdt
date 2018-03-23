@@ -4834,145 +4834,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                     Zero, 
                     Zero
                 })
-                Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
-                {
-                    If (LEqual (Arg0, ToUUID ("e5c937d0-3553-4d7a-9117-ea4d19c3434d") /* Device Labeling Interface */))
-                    {
-                        Switch (ToInteger (Arg2))
-                        {
-                            Case (Zero)
-                            {
-                                Name (OPTS, Buffer (0x02)
-                                {
-                                     0x00, 0x00                                     
-                                })
-                                CreateBitField (OPTS, Zero, FUN0)
-                                CreateBitField (OPTS, 0x04, FUN4)
-                                CreateBitField (OPTS, 0x06, FUN6)
-                                CreateBitField (OPTS, 0x08, FUN8)
-                                CreateBitField (OPTS, 0x09, FUN9)
-                                If (LGreaterEqual (Arg1, 0x02))
-                                {
-                                    Store (One, FUN0)
-                                    If (LTRE)
-                                    {
-                                        Store (One, FUN6)
-                                    }
-
-                                    If (OBFF)
-                                    {
-                                        Store (One, FUN4)
-                                    }
-
-                                    If (LEqual (ECR1, One))
-                                    {
-                                        If (LGreaterEqual (Arg1, 0x03))
-                                        {
-                                            Store (One, FUN8)
-                                            Store (One, FUN9)
-                                        }
-                                    }
-                                }
-
-                                Return (OPTS)
-                            }
-                            Case (0x04)
-                            {
-                                If (LGreaterEqual (Arg1, 0x02))
-                                {
-                                    If (OBFZ)
-                                    {
-                                        Return (Buffer (0x10)
-                                        {
-                                            /* 0000 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                                            /* 0008 */  0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00 
-                                        })
-                                    }
-                                    Else
-                                    {
-                                        Return (Buffer (0x10)
-                                        {
-                                            /* 0000 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                                            /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 
-                                        })
-                                    }
-                                }
-                            }
-                            Case (0x05)
-                            {
-                                If (LEqual (Arg1, One))
-                                {
-                                    Return (One)
-                                }
-                            }
-                            Case (0x06)
-                            {
-                                If (LGreaterEqual (Arg1, 0x02))
-                                {
-                                    If (LTRZ)
-                                    {
-                                        If (LOr (LEqual (LMSL, Zero), LEqual (LNSL, Zero)))
-                                        {
-                                            If (LEqual (PCHS, SPTH))
-                                            {
-                                                Store (0x0846, LMSL)
-                                                Store (0x0846, LNSL)
-                                            }
-                                            ElseIf (LEqual (PCHS, SPTL))
-                                            {
-                                                Store (0x1003, LMSL)
-                                                Store (0x1003, LNSL)
-                                            }
-                                        }
-
-                                        Store (And (ShiftRight (LMSL, 0x0A), 0x07), Index (LTRV, Zero))
-                                        Store (And (LMSL, 0x03FF), Index (LTRV, One))
-                                        Store (And (ShiftRight (LNSL, 0x0A), 0x07), Index (LTRV, 0x02))
-                                        Store (And (LNSL, 0x03FF), Index (LTRV, 0x03))
-                                        Return (LTRV)
-                                    }
-                                    Else
-                                    {
-                                        Return (Zero)
-                                    }
-                                }
-                            }
-                            Case (0x08)
-                            {
-                                If (LEqual (ECR1, One))
-                                {
-                                    If (LGreaterEqual (Arg1, 0x03))
-                                    {
-                                        Return (One)
-                                    }
-                                }
-                            }
-                            Case (0x09)
-                            {
-                                If (LEqual (ECR1, One))
-                                {
-                                    If (LGreaterEqual (Arg1, 0x03))
-                                    {
-                                        Return (Package (0x05)
-                                        {
-                                            0xC350, 
-                                            Ones, 
-                                            Ones, 
-                                            0xC350, 
-                                            Ones
-                                        })
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-
-                    Return (Buffer (One)
-                    {
-                         0x00                                           
-                    })
-                }
+                
 
                 Device (PXSX)
                 {
@@ -5019,6 +4881,22 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                     }
 
                     Return (PR0C)
+                }
+                Method (_DSM, 4, NotSerialized)
+                {
+                    If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
+                    Return (Package()
+                    {
+                        "AAPL,clock-id", Buffer() { 0x01 },
+                        "built-in", Buffer() { 0x00 },
+                        "subsystem-id", Buffer() { 0x70, 0x72, 0x00, 0x00 },
+                        "subsystem-vendor-id", Buffer() { 0x86, 0x80, 0x00, 0x00 },
+                        "AAPL,current-available", 2100,
+                        "AAPL,current-extra", 2200,
+                        "AAPL,current-extra-in-sleep", 1600,
+                        "AAPL,device-internal", 0x02,
+                        "AAPL,max-port-current-in-sleep", 2100,
+                    })
                 }
             }
 
@@ -13216,62 +13094,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
             }
 
             Name (XFLT, Zero)
-            Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
-            {
-                ADBG ("_DSM")
-                ShiftLeft (XADH, 0x20, Local0)
-                Or (Local0, XADL, Local0)
-                And (Local0, 0xFFFFFFFFFFFFFFF0, Local0)
-                OperationRegion (XMIO, SystemMemory, Local0, 0x9000)
-                Field (XMIO, AnyAcc, Lock, Preserve)
-                {
-                    Offset (0x550), 
-                    PCCS,   1, 
-                        ,   4, 
-                    PPLS,   4, 
-                    PTPP,   1, 
-                    Offset (0x8420), 
-                    PRTM,   2
-                }
-
-                If (PCIC (Arg0))
-                {
-                    Return (PCID (Arg0, Arg1, Arg2, Arg3))
-                }
-
-                If (LEqual (Arg0, ToUUID ("ac340cb7-e901-45bf-b7e6-2b34ec931e23")))
-                {
-                    If (LEqual (Arg1, 0x03))
-                    {
-                        Store (Arg1, XFLT)
-                    }
-
-                    If (LAnd (LGreater (PRTM, Zero), LOr (LEqual (Arg1, 0x05), LEqual (Arg1, 0x06))))
-                    {
-                        ADBG ("SSIC")
-                        If (LOr (LOr (LEqual (PCCS, Zero), LEqual (PTPP, Zero)), LAnd (LGreaterEqual (PPLS, 0x04), LLessEqual (PPLS, 0x0F))))
-                        {
-                            If (LEqual (PPLS, 0x08))
-                            {
-                                Store (One, D3HE)
-                            }
-                            Else
-                            {
-                                Store (Zero, D3HE)
-                            }
-                        }
-                        Else
-                        {
-                            Store (One, D3HE)
-                        }
-                    }
-                }
-
-                Return (Buffer (One)
-                {
-                     0x00                                           
-                })
-            }
+            
 
             Method (_S3D, 0, NotSerialized)  // _S3D: S3 Device State
             {
@@ -13623,6 +13446,22 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                         Return (Add (SSPA (), 0x05))
                     }
                 }
+            }
+            Method (_DSM, 4, NotSerialized)
+            {
+                If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
+                Return (Package()
+                {
+                    "AAPL,clock-id", Buffer() { 0x02 },
+                    "built-in", Buffer() { 0x00 },
+                    "subsystem-id", Buffer() { 0x70, 0x72, 0x00, 0x00 },
+                    "subsystem-vendor-id", Buffer() { 0x86, 0x80, 0x00, 0x00 },
+                    "AAPL,current-available", 2100,
+                    "AAPL,current-extra", 2200,
+                    "AAPL,current-extra-in-sleep", 1600,
+                    "AAPL,device-internal", 0x02,
+                    "AAPL,max-port-current-in-sleep", 2100,
+                })
             }
         }
     }
