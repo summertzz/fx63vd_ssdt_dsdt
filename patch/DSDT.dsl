@@ -4868,10 +4868,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                     Store (OBF1, OBFZ)
                 }
 
-                Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
-                {
-                    Return (GPRW (0x69, 0x04))
-                }
+                
 
                 Method (_PRT, 0, NotSerialized)  // _PRT: PCI Routing Table
                 {
@@ -4882,13 +4879,13 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
 
                     Return (PR0C)
                 }
+                
+                Name(_PRW, Package() { 0x0D, 0 })
                 Method (_DSM, 4, NotSerialized)
                 {
                     If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
                     Return (Package()
                     {
-                        "AAPL,clock-id", Buffer() { 0x01 },
-                        "built-in", Buffer() { 0x00 },
                         "subsystem-id", Buffer() { 0x70, 0x72, 0x00, 0x00 },
                         "subsystem-vendor-id", Buffer() { 0x86, 0x80, 0x00, 0x00 },
                         "AAPL,current-available", 2100,
@@ -8160,10 +8157,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                     Store (OBF1, OBFZ)
                 }
 
-                Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
-                {
-                    Return (GPRW (0x69, 0x04))
-                }
+                
 
                 Method (_PRT, 0, NotSerialized)  // _PRT: PCI Routing Table
                 {
@@ -8174,6 +8168,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
 
                     Return (PR14)
                 }
+                Name(_PRW, Package() { 0x0D, 0 })
             }
 
             Device (RP18)
@@ -13132,10 +13127,7 @@ Return (WAKP)
                 }
             }
 
-            Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
-            {
-                Return (GPRW (0x6D, 0x03))
-            }
+            
 
             Method (_DSW, 3, NotSerialized)  // _DSW: Device Sleep Wake
             {
@@ -13451,13 +13443,13 @@ Return (WAKP)
                     }
                 }
             }
+            
+            Name(_PRW, Package() { 0x0D, 0 })
             Method (_DSM, 4, NotSerialized)
             {
                 If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
                 Return (Package()
                 {
-                    "AAPL,clock-id", Buffer() { 0x02 },
-                    "built-in", Buffer() { 0x00 },
                     "subsystem-id", Buffer() { 0x70, 0x72, 0x00, 0x00 },
                     "subsystem-vendor-id", Buffer() { 0x86, 0x80, 0x00, 0x00 },
                     "AAPL,current-available", 2100,
@@ -16135,6 +16127,7 @@ Return (WAKP)
                     LPD3 (SB1A)
                 }
             }
+            Name(_PRW, Package() { 0x0D, 0 })
         }
     }
 
