@@ -40610,6 +40610,12 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                     Store (Arg1, ECOK)
                     Store (Arg1, OKEC)
                 }
+                //added to turn nvidia/radeon off
+                If (LAnd(LEqual(Arg0,3),LEqual(Arg1,1)))
+                {
+                    External(\_SB.PCI0.PEG0.PEGP._OFF, MethodObj)
+                    \_SB.PCI0.PEG0.PEGP._OFF()
+                }
             }
 
             OperationRegion (ERAM, EmbeddedControl, Zero, 0xFF)
